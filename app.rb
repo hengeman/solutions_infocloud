@@ -11,7 +11,7 @@ lib_path = File.expand_path('lib', File.dirname(__FILE__))
 $LOAD_PATH.unshift lib_path unless $LOAD_PATH.include? lib_path
 
 db_path = {
-  production:  'sqlite3:tmp/db.sqlite3',
+  production:  "sqlite3:#{ENV['OPENSHIFT_DATA_DIR']}db.sqlite3",
   development: 'sqlite3:tmp/dev.sqlite3',
   test:        'sqlite3:tmp/test.sqlite3'
 }
