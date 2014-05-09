@@ -20,7 +20,7 @@ class DpdReports
   # If production? the reports are moved to the 'parsed_reports' dir within the
   # ftp after being read.
   def fetch_reports
-    return self unless @site && @login @@ @pass
+    return self unless @site && @login && @pass
     Net::FTP.open(@site, @login, @pass) do |ftp|
       files = ftp.nlst
       ftp.mkdir 'parsed_reports' unless files.include? 'parsed_reports'
