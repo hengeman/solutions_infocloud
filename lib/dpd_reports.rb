@@ -23,14 +23,15 @@ class DpdReports
     return self unless @site && @login && @pass
     Net::FTP.open(@site, @login, @pass) do |ftp|
       ftp.passive = true # No bind- openshift doesn't allow it
+      tmp_dir = ENV['OPENSHIFT_TMP_DIR']
       files = ftp.nlst
       ftp.mkdir 'parsed_reports' unless files.include? 'parsed_reports'
       files.select { |e| e.match(/\.OUT$/) }.each do |file|
-        ftp.gettextfile(file, "#{File.expand_path('../tmp/')}/#{file}")
-        @reports << parse_report(File.read("../tmp/#{file}")
+        ftp.gettextfile(file, tmp_dir + file)
+        @reports << parse_report(File.read(tmp_dir + file)
           ).merge(date_sent: ftp.mtime(file))
         ftp.rename(file, "parsed_files/#{file}")
-        File.delete "../tmp/#{file}" if production?
+        File.delete tmp_dir + file if production?
       end
     end
     self
