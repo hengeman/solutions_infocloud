@@ -30,7 +30,7 @@ class DpdReports
         ftp.gettextfile(file, tmp_dir + file)
         @reports << parse_report(File.read(tmp_dir + file)
           ).merge(date_sent: ftp.mtime(file))
-        ftp.rename(file, "parsed_files/#{file}")
+        ftp.rename(file, "parsed_reports/#{file}")
         File.delete tmp_dir + file if production?
       end
     end
