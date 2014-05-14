@@ -17,8 +17,8 @@ class DpdReports
   # Fetches the DPD report files from the FTP specified by the ftp_dpd_site,
   # ftp_dpd_login, and ftp_dpd_pass enviroment variables.
   #
-  # If production? the reports are moved to the 'parsed_reports' dir within the
-  # ftp after being read.
+  # The reports are moved to the 'parsed_reports' dir within the ftp after
+  # being read.
   def fetch_reports
     return self unless @site && @login && @pass
     Net::FTP.open(@site, @login, @pass) do |ftp|
