@@ -22,6 +22,7 @@ class DpdReports
   def fetch_reports
     return self unless @site && @login && @pass
     Net::FTP.open(@site, @login, @pass) do |ftp|
+      ftp.passive = true # No bind- openshift doesn't allow it
       files = ftp.nlst
       ftp.mkdir 'parsed_reports' unless files.include? 'parsed_reports'
       files.select { |e| e.match(/\.OUT$/) }.each do |file|
