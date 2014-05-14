@@ -25,16 +25,34 @@ class DpdReports
       ftp.passive = true # No bind- openshift doesn't allow it
       tmp_dir = ENV['OPENSHIFT_TMP_DIR']
       files = ftp.nlst
+      $logger.debug { "#{files.size} total" }
       ftp.mkdir 'parsed_reports' unless files.include? 'parsed_reports'
       files.select { |e| e.match(/\.OUT$/) }.each do |file|
+        $logger.debug { "#{files.size}" }
+        $logger.debug { "#{file}" }
+
+        $logger.debug { "#{files.size} OUT files found" }
+
         ftp.gettextfile(file, tmp_dir + file)
+
+        $logger.debug { "file got" }
+
         @reports << parse_report(File.read(tmp_dir + file)
           ).merge(date_sent: ftp.mtime(file))
+
+        $logger.debug { "report parsed" }
+
         ftp.rename(file, "parsed_reports/#{file}")
+
+        $logger.debug { "file renamed" }
+
         File.delete tmp_dir + file if production?
+        $logger.debug { "file deleted" } if production?
       end
     end
     self
+  rescue Exception, e
+    $logger.debug { e }
   end
 
   # Saves the reports to the database. Nothing will happen unless the

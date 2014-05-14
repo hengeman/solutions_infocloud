@@ -18,8 +18,8 @@ db_path = {
 }
 set :database, db_path[settings.environment]
 
-# Logger, logs kept for 2 days
-$log = Logger.new('tmp/app.log', 2, 'daily')
+# Logger
+$logger = Logger.new("#{ENV['OPENSHIFT_LOG_DIR']}app.log", 2, 1_024_000)
 
 # Mailings model
 class Mailing < ActiveRecord::Base
